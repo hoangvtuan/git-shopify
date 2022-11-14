@@ -18,7 +18,7 @@
 
     <meta name="description" content="{{ 'gift_cards.issued.subtext' | t }}">
 
-    {{ content_for_header }}
+    {% include 'globo.filter.script' %}{{ content_for_header }}
 
     {% render 'css-variables' %}
 
@@ -47,5 +47,6 @@
     </script>
     <script src="{{ 'vendor/qrcode.js' | shopify_asset_url }}" defer="defer"></script>
     <script src="{{ 'giftcard.min.js' | asset_url }}" defer="defer"></script>
-  </body>
+  {% include 'globo.filter.action' %}
+	</body>
 </html>
