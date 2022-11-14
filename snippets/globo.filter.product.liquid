@@ -1,0 +1,162 @@
+{% raw %}
+  {% assign root_url = {% endraw %}"{%- if routes.root_url != "/" -%}{{ routes.root_url }}{%- endif -%}"{% raw %} %}
+  {% assign currencyFormat = {% endraw %}{{ shop.money_format | json }}{% raw %} %}
+  {% assign swatch_options = 'Colour~~Color' | downcase | split: "~~" | uniq  %}
+  {% assign image_options  = '' | downcase | split: "~~" | uniq  %}
+  {% assign text_options   = 'Size' | downcase | split: "~~" | uniq  %}
+  {% assign show_selected_variant_info = true %}
+ 
+  {% assign image_size     = '360x504' %}
+  {% assign images_count   = product.images | size %}
+  {% assign variants_count = product.variants | size %}
+  {% assign options_count  = product.options | size %}
+  {% assign no_image = 'https://cdn.shopify.com/s/images/themes/product-1.png' %}
+
+  {% assign featured_image            = product.featured_image %}
+  {% assign product_price             = product.price %}
+  {% assign product_compare_at_price  = product.compare_at_price %}
+  {% assign second_image_index        = 2 %}
+  {% assign selected_or_first_available_variant = product.selected_or_first_available_variant %}
+  {% assign variant_url = '' %}
+  {% if product.selected_or_first_available_variant %}{% assign variant_url = '?variant=' | append: product.selected_or_first_available_variant.id %}{% endif %}  {% if show_selected_variant_info and product.selected_variant %}
+    {% assign selected_or_first_available_variant = product.selected_variant %}
+    {% assign product_price             = selected_or_first_available_variant.price %}
+    {% assign product_compare_at_price  = selected_or_first_available_variant.compare_at_price %}
+    {% if selected_or_first_available_variant.image %}
+      {% assign featured_image = selected_or_first_available_variant.image %}
+    {% endif %}
+  {% endif %}
+
+  {% for image in product.images %}
+    {% if image.id == featured_image.id %}
+      {% if forloop.index == images_count %}
+        {% assign second_image_index = 1 %}
+      {% else %}
+        {% assign second_image_index = forloop.index | plus: 1 %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+
+            <li{% if showPageData %} data-page="{{page}}"{% endif %} class="featured-collections__item" data-view-more-item>
+    {% assign show_vendor = section.settings.show_vendor %}
+    {% if product.title %}
+    {% assign product_title = product.title %}
+    {% assign product_desc = product.description %}
+    {% assign product_vendor = product.vendor %}
+    {% else %}
+    {% assign onboarding = true %}
+    {% endif %}
+
+    <div class="product-card product-card--list">
+            <a class="full-width-link" href="{{ product.url | within: collection }}{{variant_url}}" data-product-card-link>
+        <span class="visually-hidden">{{ product_title }}</span>
+      </a>
+      <div class="product-card__link">
+        {% if product.featured_image or onboarding %}
+        <div class="product-card__image-wrapper">
+          {% if product.featured_image %}
+          <a href="{{ product.url | within: collection }}{{variant_url}}" tabindex="-1" data-product-card-link>
+            <img srcset="{% if product.featured_image.width >= 90 %}{{ product.featured_image | img_url: '90x' }} 90w,{% endif %}
+                        {% if product.featured_image.width >= 180 %}{{ product.featured_image | img_url: '180x' }} 180w,{% endif %}
+                        {% if product.featured_image.width >= 110 %}{{ product.featured_image | img_url: '110x' }} 110w,{% endif %}
+                        {% if product.featured_image.width >= 220 %}{{ product.featured_image | img_url: '220x' }} 220w,{% endif %}"
+                sizes="(min-width: 750px) 110px, 90px"
+                src="{{ product.featured_image | img_url: '110x110' }}"
+                width="{{ product.featured_image.width }}"
+                height="{{ product.featured_image.height }}"
+                loading="lazy"
+                class="media-cover"
+                alt="{{ product.featured_image.alt | escape }}"
+                data-product-card-image>
+          </a>
+          {% endif %}
+        </div>
+        {% endif %}
+        
+        <div class="product-card__content">
+          <div class="product-card__title-wrapper" aria-hidden="true">
+            <a class="h2 product-card__title" href="{{ product.url | within: collection }}{{variant_url}}" data-product-card-link>{{ product_title }}</a>
+          </div>
+          {%- if show_vendor -%}
+          <div class="product-card__vendor">{{ product_vendor }}</div>
+          {%- endif -%}
+          <div class="product-card__price-wrapper">
+            {% if product.title %}
+            {% assign compare_at_price = product.compare_at_price %}
+            {% assign price = product.price %}
+            {% assign available = product.available %}
+            {% else %}
+            {% assign compare_at_price = 1999 %}
+            {% assign price = 1999 %}
+            {% assign available = true %}
+            {% endif %}
+            {% assign money_price = price | money %}
+
+
+            <dl class="price price--listing
+                      {%- if available == false %} price--sold-out {% endif -%}
+                      {%- if compare_at_price > price %} price--on-sale {% endif -%}"
+                >
+
+              <div class="price__regular">
+                <dt>
+                  <span class="visually-hidden visually-hidden--inline">{% endraw %}{{ 'products.product.regular_price' | t }}{% raw %}</span>
+                </dt>
+                <dd>
+                  <span class="price-item price-item--regular">
+                    {% if product.price_varies %}
+                    From {{ money_price }}
+                    {% else %}
+                    {{ money_price }}
+                    {% endif %}
+                  </span>
+                </dd>
+              </div>
+              <div class="price__sale">
+                <dt>
+                  <span class="visually-hidden visually-hidden--inline">{% endraw %}{{ 'products.product.sale_price' | t }}{% raw %}</span>
+                </dt>
+                <div class="price__compare">
+                  <dt>
+                    <span class="visually-hidden visually-hidden--inline">{% endraw %}{{ 'products.product.regular_price' | t }}{% raw %}</span>
+                  </dt>
+                  <dd>
+                    <s class="price-item price-item--regular">
+                      {{ compare_at_price | money }}
+                    </s>
+                  </dd>
+                </div>
+                <dd>
+                  <span class="price-item price-item--sale">
+                    {% if product.price_varies %}
+                    From {{ money_price }}
+                    {% else %}
+                    {{ money_price }}
+                    {% endif %}
+                  </span>
+                </dd>
+              </div>
+              <div class="price__badges price__badges--listing">
+                <span class="price__badge price__badge--sale" aria-hidden="true">
+                  <span>{% endraw %}{{ 'products.product.on_sale' | t }}{% raw %}</span>
+                </span>
+                <span class="price__badge price__badge--sold-out">
+                  <span>{% endraw %}{{ 'products.product.sold_out' | t }}{% raw %}</span>
+                </span>
+              </div>
+            </dl>
+            <a href="{{ product.url | within: collection }}{{variant_url}}" class="rte product-card__view-details" data-product-card-link>
+              {% endraw %}{{ 'products.product.view_details' | t }}{% raw %}
+            </a>
+          </div>
+                    {%- if product_desc != blank -%}
+          <div class="product-card__description-wrapper" aria-hidden="true">
+          <p class="product-card__description">{{ product_desc | strip_html }}</p>
+          </div>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+
+</li>
+      {% endraw %}
