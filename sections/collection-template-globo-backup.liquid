@@ -32,7 +32,7 @@
     </div>
 
     {%- paginate collection.products by 36 -%}
-      <ul data-section-id="{% if section.id %}{{section.id}}{% endif %}" data-sectionId="{% if section.id %}{{section.id}}{% endif %}" {% if section.blocks %}data-blocks='{ {%- capture blocks_json -%}{% for block in section.blocks %}{%- capture block_json -%}"{{ block.type }}":{{ block.settings | json }}{%- endcapture -%}{{ block_json | prepend: ","  }}{% endfor %}{%- endcapture -%}{{ blocks_json | remove_first: "," }} }' {% endif %} data-settings='{% if section.settings %}{{section.settings | json}}{% endif %}' data-globo-filter-items class="featured-collections__products collections__products grid grid--2-col-tablet">
+      <ul class="featured-collections__products collections__products grid grid--2-col-tablet">
       {%- for product in collection.products -%}
         <li class="featured-collections__item" data-view-more-item>
           {% render 'product-card-list', product: product, show_vendor: section.settings.show_vendor %}
