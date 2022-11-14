@@ -3,7 +3,7 @@
 {% assign page = {% endraw %}"{{ request.page_type }}"{% raw %} %}
 <div id="gf-controls-container">
     {% if page != 'search' %}
-  <form class="gf-controls-search-form">
+  <form class="gf-controls-search-form visible-xs">
     <input value="{{terms | escape}}" onkeyup="this.setAttribute('value', this.value); searchProducts(this.value);" name="q" placeholder="{{translation.product.search | default: "Search products"}}" aria-label="{{translation.product.search | default: "Search products"}}" autocomplete="off" class="gf-controls-search-input"/>
     <button onclick="clearSearchProducts()" type="button" class="gf-controls-clear-button">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M11.414 10l6.293-6.293a1 1 0 10-1.414-1.414L10 8.586 3.707 2.293a1 1 0 00-1.414 1.414L8.586 10l-6.293 6.293a1 1 0 101.414 1.414L10 11.414l6.293 6.293A.998.998 0 0018 17a.999.999 0 00-.293-.707L11.414 10z" fill="#5C5F62"/></svg>
